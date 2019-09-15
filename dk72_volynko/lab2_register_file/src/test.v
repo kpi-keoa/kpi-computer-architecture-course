@@ -12,8 +12,7 @@ reg [4:0] adr_sig, readadrA_sig, readadrB_sig;
 reg [31:0] data_sig;
 wire [31:0] A_sig, B_sig;
 
-lab2_register_file lab2_register_file_inst
-(
+lab2_register_file lab2_register_file_inst(
 	.adr(adr_sig) ,	// input [4:0] adr_sig
 	.we(we_sig) ,	// input  we_sig
 	.data(data_sig) ,	// input [31:0] data_sig
