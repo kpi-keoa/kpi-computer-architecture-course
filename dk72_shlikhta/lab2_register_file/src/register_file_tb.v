@@ -6,15 +6,15 @@ module register_file_tb;
 
 reg CLK_sig;
 reg ASRST_sig;
-reg [4:0] READ_ADDR_A_sig;
-reg [4:0] READ_ADDR_B_sig;
-reg [4:0] WE_ADDR_sig;
+reg [4:0] READ_ADDR_A_sig = 0;
+reg [4:0] READ_ADDR_B_sig = 0;
+reg [4:0] WE_ADDR_sig = 0;
 reg WE_sig;
-reg [31:0] IN_DATA_sig;
+reg [31:0] IN_DATA_sig = 0;
 wire [31:0] OUT_DATA_A_sig;
 wire [31:0] OUT_DATA_B_sig;
 
-integer i, test_data[31:0];
+integer i = 0, test_data[31:0];
 
 register_file register_file_inst
 (
@@ -37,10 +37,20 @@ end
 initial begin
 	WE_sig = 1'b0;
 	ASRST_sig=1'b1;
-	#2 ASRST_sig=1'b0;
-	#2 ASRST_sig=1'b1;
+	#0.5 ASRST_sig=1'b0;
+	#1 ASRST_sig=1'b1;
+	READ_ADDR_A_sig = 0;
+	READ_ADDR_B_sig = 0;
 	
-	for(i=0; i<32;i=i+1)
+	for(i = 0; i < 32;i = i + 1)
+	begin
+		#4
+		READ_ADDR_A_sig = i;
+		READ_ADDR_B_sig = i;
+	end
+	
+	
+	for(i = 0; i < 32;i = i + 1)
 	begin
 		WE_ADDR_sig = i;
 		test_data[i] = $random;
@@ -53,23 +63,12 @@ initial begin
  	WE_ADDR_sig = 4'b0000;
 	IN_DATA_sig = 0;
 	
-	for(i=0; i<32;i=i+1)
+	for(i = 0; i < 32;i = i + 1)
 	begin
 		#4
 		READ_ADDR_A_sig = i;
 		READ_ADDR_B_sig = i;
 	end
-
-	#4 ASRST_sig=1'b0;
-	#2 ASRST_sig=1'b1;
-
-	for(i=0; i<32;i=i+1)
-	begin
-		#4
-		READ_ADDR_A_sig = i;
-		READ_ADDR_B_sig = i;
-	end
-
 end
 
 
