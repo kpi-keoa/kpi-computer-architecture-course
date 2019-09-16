@@ -16,8 +16,7 @@ reg [31:0] Out1_sig, Out2_sig;
 
 
 
-registerFile registerFile_inst
-(
+registerFile registerFile_test_inst(
 	.inR1(inR1_sig) ,	// input [4:0] inR1_sig
 	.inR2(inR2_sig) ,	// input [4:0] inR2_sig
 	.inW1(inW1_sig) ,	// input [4:0] inW1_sig
@@ -49,11 +48,6 @@ end
 initial begin
 	inR1_sig = 1'b0;
 	inR2_sig = 1'b0;
-/*	for (int i = 0; i < 32; i++) begin
-		#10
-		inR1_sig = i;
-		inR2_sig = i;
-	end */
 end
 initial begin
 
@@ -71,10 +65,4 @@ initial begin
 end
 
 endmodule
-
-
-
-
-
-
 
