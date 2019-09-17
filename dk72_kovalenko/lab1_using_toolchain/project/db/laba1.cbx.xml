@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="laba1">
+		<CBX_INST_ENTRY INSTANCE_NAME="|Block1|mux32:inst1|lpm_mux:LPM_MUX_component" CBX_FILE_NAME="mux_9oc.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|Block1|mux32:inst2|lpm_mux:LPM_MUX_component" CBX_FILE_NAME="mux_9oc.tdf"/>
+	</PROJECT>
+</LOG_ROOT>
