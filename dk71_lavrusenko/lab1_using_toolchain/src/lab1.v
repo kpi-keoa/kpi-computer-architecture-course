@@ -3,14 +3,7 @@
 // VERSION		"Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition"
 // CREATED		"Sun Sep 15 14:35:06 2019"
 
-module lab1(
-	clk,
-	arst,
-	we,
-	rst,
-	data,
-	q
-);
+module lab1(clk, arst, we, rst,	data, q);
 
 
 input wire	clk;
@@ -20,14 +13,13 @@ input wire	rst;
 input wire	[31:0] data;
 output wire	[31:0] q;
 
+
 wire	[31:0] d;
 wire	[31:0] dout;
 wire	SYNTHESIZED_WIRE_0;
 wire	[0:31] SYNTHESIZED_WIRE_1;
 
 assign	SYNTHESIZED_WIRE_1 = 0;
-
-
 
 
 register	b2v_inst(
@@ -236,7 +228,6 @@ register	b2v_inst31(
 	.i_arstn(arst),
 	.i_we(we),
 	.o_q(dout[31]));
-
 
 
 lpm_mux0	b2v_inst34(

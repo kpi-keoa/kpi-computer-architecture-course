@@ -1,7 +1,0 @@
-
-
-/home/laviss/workspace/lab1_using_toolchain/lab1_using_toolchain/lpm_shiftreg.v
-
-Sep 13 02PM:06:33>: Variation file name (lpm_shiftreg) is identical with the name of one of its sub-components.
-
-MegaWizard Plug-In Manager will rename the variation to "lpm_shiftrea" to prevent compilation errors
