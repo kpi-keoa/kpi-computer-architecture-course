@@ -4,7 +4,4 @@
 /output_files
 *.txt
 *.bak
-*.bsf
-*.qip
-*.qpf
-*.qsf
+
