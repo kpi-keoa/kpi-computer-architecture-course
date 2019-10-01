@@ -5,7 +5,7 @@
 `define ROR 3'b011
 `define SRA 3'b11?
 
-module barrel_shifter #(parameter WIDTH = 32)(
+module barrel_shifter #(parameter WIDTH = 32) (
 input  [WIDTH-1:0] data_in,
 input  [2:0]  bs_opsel,
 input  [4:0]  shift_amount,
@@ -29,6 +29,7 @@ always @* begin
 		`ROL:  result = data_mod[63:32];
 		`ROR:  result = data_mod2[31:0];
 		`SRA:  result = data_mod2[63:32];
+	default: result = {WIDTH{1'bz}};
 	endcase
 end
 

@@ -28,27 +28,29 @@ alu alu_inst
 initial begin
 	in_a_sig = 32'h22222222;//add
 	#20 in_a_sig = 32'd4; //mult
-	#20 in_a_sig = 32'h12345678; //shift
+	#40 in_a_sig = 32'h12345678; //shift
 	#50 in_a_sig = 32'h44444444; //logic
 end
 initial begin
 	in_b_sig = 32'h11111111;//add
 	#20 in_b_sig = 32'd2; //mult
-	#20 in_b_sig = 5'h4; //shift
+	#40 in_b_sig = 5'h4; //shift
 	#50 in_b_sig = 32'h44444444; //logic
 end
 initial begin
 	in_func_sig = 2'b11;	//ADD
 	#20 in_func_sig = 2'b00;	//MULT
-	#20 in_func_sig = 2'b10; //SHIFT
+	#40 in_func_sig = 2'b10; //SHIFT
 	#50 in_func_sig = 2'b01; //LOGIC
 end
 initial begin
 	in_opt_sig = 1'b0;		//ADD SUB TEST
 	#10 in_opt_sig = 1'b1;
 
-	#10 in_opt_sig = 1'b0;		//MULT DIV TEST
-	#10 in_opt_sig = 1'b1;
+	#10 in_opt_sig = 2'b00;		//MULT HIGHT
+	#10 in_opt_sig = 2'b10;		//MULT LOW
+	#10 in_opt_sig = 2'b01;		//DIV HIGHT
+	#10 in_opt_sig = 2'b11;
 
 	#10 in_opt_sig = 3'b000;	//Sll
 	#10 in_opt_sig = 3'b001;	//SRl

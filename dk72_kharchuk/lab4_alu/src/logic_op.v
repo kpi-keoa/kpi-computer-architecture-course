@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module logic_op #(parameter WIDTH = 32)(
+module logic_op #(parameter WIDTH = 32) (
 input [WIDTH-1:0] in_A, in_B,
 input [1:0] in_opt, 
 output reg [WIDTH -1:0] out);
