@@ -30,6 +30,7 @@ always @* begin
 		`BS_ROL : result = data_mod1[63:32];
 		`BS_ROR : result = data_mod2[31:0];
 		`BS_SRA : result = data_mod2[63:32];
+		default:  result = {32{1'bz}}; 
   endcase
 end
 
