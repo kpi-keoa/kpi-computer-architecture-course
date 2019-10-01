@@ -16,33 +16,6 @@ output reg [`REG_WIDTH-1:0] alu_result_h = 0;
 wire [`REG_WIDTH-1:0] bs_res, log_res, addsub_res, mul_res_l, mul_res_h, div_res_div, div_res_rem;
 wire as_ovf, as_cf;
 
-//TASKS DESCRIPTION
-
-task state_z_h;
-	begin
-		alu_result_h = 0;
-	end
-endtask
-
-task state_z_l;
-	begin
-		alu_result_l = 0;
-	end
-endtask
-
-task state_z;
-	begin
-		state_z_h;
-		state_z_l;
-	end
-endtask
-
-task zero_flag_check;
-	begin
-		zero_flag_l = ~| alu_result_l;
-		zero_flag_h = ~| alu_result_h;
-	end
-endtask
 	
 //EXTERNALS MODULES
 	
@@ -59,51 +32,51 @@ logic logic_0(op_a[`REG_WIDTH-1:0], op_b[`REG_WIDTH-1:0], alu_opsel[`LOGIC_DIAP]
 //MAIN BLOCK
 always @* begin
 	
-	case(alu_opsel[`ALU_OP_DIAP])
+	casez(alu_opsel[`ALU_OP_DIAP])
 	
 		`BS: begin
 			alu_result_l = bs_res;
-			state_z_h;
+			alu_result_h = 0;
+			ovf_flag = 0;
+			cf_flag = 0;
 		end
 		
 		`ADDSUB: begin
-			if(alu_opsel[`ADDSUB_USLESS_DIAP] == 0) begin
-				alu_result_l = addsub_res;
-				state_z_h;
-				ovf_flag = as_ovf;
-				cf_flag = as_cf;
-			end else
-				state_z;
+			alu_result_l = addsub_res;
+			alu_result_h = 0;
+			ovf_flag = as_ovf;
+			cf_flag = as_cf;
 		end
 		
 		`MUL: begin
-			if(alu_opsel[`MUL_USLESS_DIAP] == 0) begin
-				alu_result_l = mul_res_l;
-				alu_result_h = mul_res_h;
-			end else
-				state_z;
+			alu_result_l = mul_res_l;
+			alu_result_h = mul_res_h;
+			ovf_flag = 0;
+			cf_flag = 0;
 		end
 		
 		`DIV: begin
-			if(alu_opsel[`DIV_USLESS_DIAP] == 0) begin
-				alu_result_l = div_res_div;
-				alu_result_h = div_res_rem;
-			end else
-				state_z;
+			alu_result_l = div_res_div;
+			alu_result_h = div_res_rem;
+			ovf_flag = 0;
+			cf_flag = 0;
 		end
 		
 		`LOGIC:begin
-			if(alu_opsel[`LOGIC_USLESS_DIAP] == 0) begin
-				alu_result_l = log_res;
-				state_z_h;
-			end else
-				state_z;
+			alu_result_l = log_res;
+			alu_result_h = 0;
+			ovf_flag = 0;
+			cf_flag = 0;
 		end
 		default: begin
-			state_z;
+			alu_result_h = 0;
+			alu_result_l = 0;
+			ovf_flag = 0;
+			cf_flag = 0;
 		end
 	endcase
 	
-	zero_flag_check;
+	zero_flag_l = ~| alu_result_l;
+	zero_flag_h = ~| alu_result_h;
 end
 endmodule

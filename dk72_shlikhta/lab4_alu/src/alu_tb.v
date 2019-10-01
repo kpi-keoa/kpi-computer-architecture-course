@@ -35,8 +35,7 @@ alu alu_inst
 initial begin
 
 ////////BARREL SHIFTER	
-	alu_opsel_sig = 0;
-	alu_opsel_sig[2:0] = `BS;
+	alu_opsel_sig = `BS;
 	
 	op_b_sig = $random();
 
@@ -49,8 +48,8 @@ initial begin
 	end
 
 ////////ADDER_SUBSTRACTOR	
-	alu_opsel_sig = 0;
-	alu_opsel_sig[2:0] = `ADDSUB;
+	alu_opsel_sig = `ADDSUB;
+	alu_opsel_sig[3] = 0;
 	
 	op_a_sig = 32'hffffffff;
 	op_b_sig = 32'hffffffff;
@@ -87,8 +86,7 @@ initial begin
 	#10;
 
 ////////MULTIPLIER
-	alu_opsel_sig = 0;
-	alu_opsel_sig[2:0] = `MUL;
+	alu_opsel_sig = `MUL;
 
 	op_a_sig = 32'hffffffff;
 	op_b_sig = 32'h0fffffff;
@@ -107,8 +105,7 @@ initial begin
 	#10;
 
 ////////DIVIDER
-	alu_opsel_sig = 0;
-	alu_opsel_sig[2:0] = `DIV;
+	alu_opsel_sig = `DIV;
 
 	op_a_sig = 32'hffffffff;
 	op_b_sig = 32'h0fffffff;
@@ -123,8 +120,8 @@ initial begin
 	#10;
 
 ////////LOGIC FUNCTIONS
-	alu_opsel_sig = 0;
-	alu_opsel_sig[2:0] = `LOGIC;
+	alu_opsel_sig = `LOGIC;
+	alu_opsel_sig[4:3] = 0;
 
 	op_a_sig = 32'hA4AA4A44;
 	op_b_sig = 32'hA4AA4A44;
