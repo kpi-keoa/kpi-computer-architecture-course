@@ -1,0 +1,24 @@
+module flop(i_clk, i_arstn, i_srstn, i_we, i_data, o_data)
+
+input wire	i_clk;
+input wire	i_we;
+input wire	i_arstn;
+input wire	i_srstn;
+input wire	[31:0] i_data;
+output wire	[31:0] o_data;
+
+// asynchronous reset
+always_ff @(posedge i_clk, posedge i_arstn) begin
+	if (i_arstn) o_data <= 0;
+	else if (i_we) o_data <= i_data;
+	else o_data <= o_data
+end
+
+// synchronous reset
+always_ff @(posedge i_clk) begin
+	if (i_sratn) o_data <= 0;
+	else if (i_we) o_data <= i_data;
+	else o_data <= o_data
+end
+
+endmodule
