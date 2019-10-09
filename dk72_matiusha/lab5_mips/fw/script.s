@@ -1,0 +1,106 @@
+#INSTR TYPES
+# OP_R REGx REGx REGx SHx FUNC_x 								rtype
+# OP_x REGx REGx IMM_xxxxxxxxxxxxxxxx 							itype
+# OP_J OP_xABS OP_xINV COND_x IMM_xxxxxxxxxxxxxxxxxxxxxxxxxx 	jtype
+
+s/\/\/.*$//g
+
+s/SH0 /00000/g
+#shift other than 0 not implemented
+
+
+#RTYPE relative
+# OP_R REGx REGx REGx SHx FUNC_x 
+s/FUNC_ADD/000000/g
+s/FUNC_SUB/000001/g
+s/FUNC_SBT/000010/g
+s/FUNC_SLT/000011/g
+s/FUNC_MULL/000100/g
+s/FUNC_REM/000101/g
+s/FUNC_MULH/000110/g
+s/FUNC_DIV/000111/g
+s/FUNC_AND/001000/g
+s/FUNC_OR/001001/g
+s/FUNC_NOR/001010/g
+s/FUNC_XOR/001011/g
+s/FUNC_LSL/001100/g
+s/FUNC_LSR/001101/g
+s/FUNC_ASR/001110/g
+s/FUNC_ROR/001111/g
+
+
+#ITYPE
+# OP_x REGx REGx IMM_xxxxxxxxxxxxxxxx 
+s/OP_R /000000/g
+s/OP_ADDI /000001/g
+s/OP_SUBI /000011/g
+s/OP_SBTI /000101/g
+s/OP_SLTI /000111/g
+s/OP_MULLI /001001/g
+s/OP_REMI /001101/g
+s/OP_MULHI /001110/g
+s/OP_DIVI /001111/g
+s/OP_ANDI /010001/g
+s/OP_ORI /010011/g
+s/OP_NORI /010101/g
+s/OP_XORI /010111/g
+s/OP_LSLI /011001/g
+s/OP_LSRI /011011/g
+s/OP_ASRI /011101/g
+s/OP_RORI /011111/g
+
+s/OP_LW /000100/g
+s/OP_SW /000010/g
+
+
+s/IMM_//g
+
+
+#J
+# OP_J OP_xABS OP_xINV COND_x IMM_xxxxxxxxxxxxxxxxxxxxxxxxxx
+s/OP_J /1/g
+
+s/OP_ABS /1/g
+s/OP_REL /0/g
+
+s/OP_INV /10/g
+s/OP_NINV /00/g
+
+s/COND_O /00/g
+s/COND_S /01/g
+s/COND_Z /10/g
+s/COND_C /11/g
+
+s/REG0 /00000/g
+s/REG1 /00001/g
+s/REG2 /00010/g
+s/REG3 /00011/g
+s/REG4 /00100/g
+s/REG5 /00101/g
+s/REG6 /00110/g
+s/REG7 /00111/g
+s/REG8 /01000/g
+s/REG9 /01001/g
+s/REG10 /01010/g
+s/REG11 /01011/g
+s/REG12 /01100/g
+s/REG13 /01101/g
+s/REG14 /01110/g
+s/REG15 /01111/g
+s/REG16 /10000/g
+s/REG17 /10001/g
+s/REG18 /10010/g
+s/REG19 /10011/g
+s/REG20 /10100/g
+s/REG21 /10101/g
+s/REG22 /10110/g
+s/REG23 /10111/g
+s/REG24 /11000/g
+s/REG25 /11001/g
+s/REG26 /11010/g
+s/REG27 /11011/g
+s/REG28 /11100/g
+s/REG29 /11101/g
+s/REG30 /11110/g
+s/REG31 /11111/g
+
