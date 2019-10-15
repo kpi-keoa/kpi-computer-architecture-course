@@ -1,0 +1,7 @@
+project/db
+project/incremental_db
+project/output_files
+project/Alu_description.txt
+src/barrel_shifter.v.bak
+src/lab4_alu.v.bak
+src/mul_div.v.bak
