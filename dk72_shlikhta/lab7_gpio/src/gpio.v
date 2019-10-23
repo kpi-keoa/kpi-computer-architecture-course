@@ -32,8 +32,6 @@ assign port_w = gpio_regs[`PORT_ADDR];
 
 gpio_cell gpio_0[`REG_WIDTH-1:0](ddr_w, port_w, pin_w, io) ;
 
-initial $writememb("/home/drcah4ec/lab7_gpio/mips_core/GPIO_OUT.dat", gpio_regs);
-
 always @(posedge clk or negedge arst_n) begin
 	if(!arst_n) begin
 		gpio_regs[`DDR_ADDR] <= 32'b0;

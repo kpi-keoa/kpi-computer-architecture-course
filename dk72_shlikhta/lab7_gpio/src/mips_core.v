@@ -2,21 +2,24 @@
 
 `define REG_WIDTH 32
 
-module mips_core(clk, arst_n, LEDG, instr, SW, LEDR, HEX0, HEX1, HEX2, KEY);
+module mips_core(CLOCK_27, LEDG, SW, LEDR, HEX0, HEX1, HEX2, KEY);
 
-input clk;
-input arst_n;
+input CLOCK_27;
 inout [17:13] SW;
-inout [3:1] KEY;
+inout [0:0] KEY;
 
 output [6:0] HEX0;
 output [6:0] HEX1;
 output [6:0] HEX2;
-output [2:0] LEDR;
+output [5:0] LEDR;
 output reg [2:0] LEDG;
-output [6:0] instr;
+//output [6:0] instr;
 
-// wire clk = CLOCK_27;
+wire clk;
+clk_div8 clk_div(CLOCK_27, clk);
+
+wire arst_n;
+assign arst_n = KEY[0];
 
 wire [`REG_WIDTH-1:0] instr_addr;
 wire [`REG_WIDTH-1:0] next_instr;
@@ -61,7 +64,7 @@ instruction_memory instr_mem_0(instr_addr, instruction);
 
 assign reg_write_addr =  reg_dst ? rd : rt;
 
-reg_file reg_file_0(bus_w, reg_write_addr, clk, reg_write, rs, bus_a, rt, bus_b);
+reg_file reg_file_0(bus_w, reg_write_addr, clk, reg_write, rs, bus_a, rt, bus_b, arst_n);
 
 assign imm26 = instruction[25:0];
 
@@ -90,11 +93,11 @@ data_control data_control_0(alu_res, mem_write, data_we, data_out_addr);
 
 bus_mux mux_0(data_out_addr, mem_data_out, gpio_out, com_data_out); //this mux will be expanded in future
 
-gpio gpio_0(bus_b, alu_res, data_we[1], clk, arst_n, gpio_out, {LEDR[2:0], HEX2[6:0], HEX1[6:0], HEX0[6:0], KEY[3:1], SW[17:13]});
+gpio gpio_0(bus_b, alu_res, data_we[1], clk, arst_n, gpio_out, {LEDR[2:0], HEX2[6:0], HEX1[6:0], HEX0[6:0], LEDR[5:3], SW[17:13]});
 
 
 
-assign instr = instr_addr[6:0];
+//assign instr = instr_addr[6:0];
 
 always @* begin
 	LEDG[0] = zero_flag;
