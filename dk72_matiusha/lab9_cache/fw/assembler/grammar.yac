@@ -1,0 +1,464 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+
+
+#define OPC_R 0x0
+#define OPC_I (1<<26)
+#define OPC_J (1<<31)
+#define R_ALUOP_POS 0
+#define R_RT_POS 16
+#define R_RS_POS 21
+#define R_RD_POS 11
+#define I_ALUOP_POS 27
+#define I_MEMOP_POS 26
+
+#define ALU_ADD  0x0 
+#define ALU_SUB  0x1
+#define ALU_SBT  0x2 
+#define ALU_SLT  0x3 
+#define ALU_MULL  0x4 
+#define ALU_REM  0x5
+#define ALU_MULH  0x6 
+#define ALU_DIV  0x7 
+#define ALU_AND  0x8 
+#define ALU_OR  0x9 
+#define ALU_NOR  0xa 
+#define ALU_XOR  0xb 
+#define ALU_LSL  0xc 
+#define ALU_LSR  0xd 
+#define ALU_ASR  0xe 
+#define ALU_ROR  0xf 
+
+#define OPC_LW 0x02
+#define OPC_SW 0x01
+
+#define J_OP_POS 26
+
+
+const char* r_insns[] = {
+	"add",
+	"sub",
+	"sbt",
+	"slt",
+	"mull",
+	"rem",
+	"mulh",
+	"div",
+	"and",
+	"or",
+	"nor",
+	"xor",
+	"lsl",
+	"lsr",
+	"asr",
+	"ror"
+};
+
+const char* mem_insns[] = {
+	"lw", 
+	"sw"
+};
+const uint32_t mem_opcs[] = {
+	0b000100, 
+	0b000010
+};
+
+
+const char* j_insns[] = {
+	"jmp",
+	"jo",
+	"js",
+	"jz",
+	"jc",
+	"jno",
+	"jns",
+	"jnz",
+	"jnc"
+};
+
+const uint32_t j_opcs[] = {
+	0b110000, 
+	0b100000, 
+	0b100001, 
+	0b100010, 
+	0b100011, 
+	0b101000, 
+	0b101001, 
+	0b101010, 
+	0b101011
+};
+
+
+
+
+typedef struct _par_ams{
+	char* instr;
+	char** ops;
+	char* label;
+	int numops;
+	int line;
+	int instr_count;
+	int labels_count;
+}ASMPARAMS;
+
+typedef struct __label{
+	unsigned int addr_preset;
+	unsigned int label_addr; // label addr in file
+	char label_name[64]; //
+}label;
+
+label* labels;
+
+#define EQSTR(s1,s2) (!strcasecmp(s1,s2))
+ASMPARAMS* keked=NULL;
+uint32_t instr_opcode=0;
+FILE* infile=NULL;
+FILE* outfile=NULL;
+void yyerror(const char *str)
+{
+        fprintf(stderr,"error at line %d:  %s %s %s %s $3:\n%s\n", keked->line, keked->instr, keked->ops[0], keked->ops[1],keked->ops[2], str);
+        exit(1);
+}
+ 
+int yywrap()
+{
+        return 1;
+} 
+  
+void print_labels(){
+	for (int i = 0; i < keked->labels_count; ++i)
+	{
+		printf("addr: %#x, addr_preset: %#x, name: %s\n", labels[i].label_addr, labels[i].addr_preset, labels[i].label_name);
+	}
+}
+
+
+%}
+
+%token LABEL REGISTER HEXNUM DECNUM INSTRUCTION COMMA OPREF CLOSEREF COMMENT DECLABEL// PLUS
+
+%%
+
+commands:
+        | commands command
+        ;
+
+command: 
+		iitype |irtype | ijtype | linefeed | iimemacc| i0_label 
+        ;
+
+i0_label:
+		DECLABEL COMMENT
+		{
+			char fnd_l=0;
+			keked->label[strlen(keked->label)-1]=0;
+			for (int i = 0; i < keked->labels_count; ++i)
+			{
+				if(EQSTR(labels[i].label_name, keked->label)){ // if label already declared
+					if(labels[i].addr_preset == 0){
+						//TODO: overwrite jmpaddr in file
+						printf("\n--\ncurrent addr: %x, label offs %x, imm %d\n", keked->instr_count, labels[i].label_addr, keked->instr_count-labels[i].label_addr);
+						printf("overwrite %s\n",keked->label);
+						fnd_l=1;
+						labels[i].addr_preset=1;
+						//long int tell_tmp=ftell(outfile);
+						//printf("%li, %li\n", tell_tmp,9+labels[i].label_addr*5);
+						//fseek(outfile, 9+(labels[i].label_addr-1)*5+2, SEEK_SET);
+						//instr_opcode=0;
+						//instr_opcode &= 0x3ffffff;
+						//fprintf(outfile, "%02x", instr_opcode);
+						//fseek(outfile,tell_tmp,SEEK_SET); 
+						continue;
+					}else{
+						printf("addr not preset\n");
+					}
+				}else{
+						printf("label not found\n");}
+
+			}
+			if(!fnd_l){
+					keked->labels_count++;
+					label* lab_t = malloc(keked->labels_count*sizeof(label));
+					memcpy(lab_t, labels, keked->labels_count*sizeof(label));
+					free(labels);
+					labels=lab_t;
+					lab_t=NULL;
+					label* t_lab=malloc(sizeof(label));
+					t_lab->label_addr=keked->instr_count;
+					t_lab->addr_preset=1;
+					strncpy(t_lab->label_name, keked->label, 63);
+					memcpy(&(labels[keked->labels_count-1]),t_lab,sizeof(label));
+					//__asm__(:::"memory");
+					printf("\n--\ndeclared %s\n",keked->label);
+					free(t_lab);
+			}else{
+						printf("not found\n");
+			}
+			//print_labels();
+			printf( "DECLABEL: %s\n", keked->label);
+			
+			
+
+		}
+
+
+
+ijtype:
+		INSTRUCTION LABEL COMMENT
+		{
+			printf("OFFSWT %li\n",ftell(outfile)); // j jz bnz i takoe
+			char fnd_l=0;
+			for (int i = 0; i < keked->labels_count; ++i)
+			{
+				if(EQSTR(labels[i].label_name, keked->label) && (labels[i].addr_preset != 0)){ // if label already declared
+
+					printf("\n--\naccepted %s\n",keked->label);
+					printf("current addr: %x, label offs %x, imm %i\n", keked->instr_count, labels[i].label_addr, keked->instr_count- labels[i].label_addr);
+					fnd_l=1;
+					instr_opcode=0;
+					instr_opcode|=(EQSTR(keked->instr, "jmp"))?labels[i].label_addr&0x3ffffff:(-keked->instr_count+ labels[i].label_addr)&0x3ffffff;
+					for (int i = 0; i < sizeof(j_insns)/sizeof(j_insns[0]); ++i)
+					{
+						if(EQSTR(keked->instr, j_insns[i])){
+							instr_opcode |= j_opcs[i]<<J_OP_POS;
+							break;
+						}
+						if(i==sizeof(j_insns)/sizeof(j_insns[0])-1)yyerror("unknown instruction");
+					}
+					printf("OPCODE %08x\n", instr_opcode);
+					break;
+				}else{
+						printf("addr not preset and not found\n");
+					}
+
+			}
+			if(!fnd_l){
+					keked->labels_count++;
+					label* lab_t = malloc(keked->labels_count*sizeof(label));
+					memcpy(lab_t, labels, keked->labels_count*sizeof(label));
+					free(labels);
+					labels=lab_t;
+					lab_t=NULL;
+					label* t_lab=malloc(sizeof(label));
+					t_lab->label_addr=keked->instr_count;
+					t_lab->addr_preset=0;
+					strncpy(t_lab->label_name, keked->label, 63);
+					memcpy(&(labels[keked->labels_count-1]),t_lab,sizeof(label));
+					instr_opcode=0;
+					//instr_opcode|=JMP_BASE;
+					for (int i = 0; i < sizeof(j_insns)/sizeof(j_insns[0]); ++i)
+					{
+						if(EQSTR(keked->instr, j_insns[i])){
+							instr_opcode |= j_opcs[i]<<J_OP_POS;
+							break;
+						}
+						if(i==sizeof(j_insns)/sizeof(j_insns[0])-1)yyerror("unknown instruction");
+					}
+				
+					printf("\n--\ndeclared %s\n",keked->label);
+					printf("OPCODE %08x\n", instr_opcode);
+					free(t_lab);
+			}else{
+				printf("not found label for instr\n");
+			}
+			//print_labels();
+			printf( "JMPINSTR: { %s } { %s } \n", keked->instr, keked->label);
+			
+		};
+
+irtype:
+		INSTRUCTION REGISTER COMMA REGISTER COMMA REGISTER COMMENT
+		{
+			printf( "RT :{ %s } { %s } , { %s } , { %s }  %d \n",  keked->instr, keked->ops[0], keked->ops[1], keked->ops[2], keked->line);
+			instr_opcode = 0;
+			uint32_t rd = atoi(keked->ops[0]+1);
+			uint32_t rs = atoi(keked->ops[1]+1);
+			uint32_t rt = atoi(keked->ops[2]+1);
+			for (int i = 0; i < sizeof(r_insns)/sizeof(r_insns[0]); ++i)
+			{
+				if(EQSTR(keked->instr, r_insns[i])){
+					instr_opcode |= i;
+					break;
+				}
+				if(i==15)yyerror("unknown instruction");
+			}
+			instr_opcode |= rd<<R_RD_POS | rs<<R_RS_POS | rt<<R_RT_POS;
+			printf("OPCODE %08x\n", instr_opcode);
+		};
+
+
+iitype:
+		INSTRUCTION REGISTER COMMA REGISTER COMMA HEXNUM COMMENT
+		{
+			printf( "IT :{ %s } { %s } , { %s } , { %s } %d \n",  keked->instr, keked->ops[0], keked->ops[1], keked->ops[2], keked->line);
+			instr_opcode=0;
+			instr_opcode |= OPC_I;
+			uint32_t rd = atoi(keked->ops[0]+1);
+			uint32_t rs = atoi(keked->ops[1]+1);
+			uint32_t rt = strtol(keked->ops[2], NULL, 16)&0xffff;
+			printf("RD %0x RS %0x RT 0x%04x\n", rd, rs, rt);
+			for (int i = 0; i < sizeof(r_insns)/sizeof(r_insns[0]); ++i)
+			{
+				if(EQSTR(keked->instr, r_insns[i])){
+					instr_opcode |= i<<I_ALUOP_POS;
+					break;
+				}
+				if(i==15)yyerror("unknown instruction");
+			}
+			instr_opcode |=  rs<<R_RS_POS | rd<<R_RT_POS | (uint16_t)rt;
+			printf("OPCODE %08x\n", instr_opcode);
+		};
+
+iitype:
+		INSTRUCTION REGISTER COMMA REGISTER COMMA DECNUM COMMENT
+		{
+			printf( "IT :{ %s } { %s } , { %s } , { %s } %d \n",  keked->instr, keked->ops[0], keked->ops[1], keked->ops[2], keked->line);
+			instr_opcode=0;
+			instr_opcode |= OPC_I;
+			uint32_t rd = atoi(keked->ops[0]+1);
+			uint32_t rs = atoi(keked->ops[1]+1);
+			uint32_t rt = strtol(keked->ops[2],NULL,10)&0xffff;
+			printf("RD %0x RS %0x RT %04x\n", rd, rs, rt);
+			for (int i = 0; i < sizeof(r_insns)/sizeof(r_insns[0]); ++i)
+			{
+				if(EQSTR(keked->instr, r_insns[i])){
+					instr_opcode |= i<<I_ALUOP_POS;
+					break;
+				}
+				if(i==15)yyerror("unknown instruction");
+			}
+			instr_opcode |=  rs<<R_RS_POS | rd<<R_RT_POS | (uint16_t)rt;
+			printf("OPCODE %08x\n", instr_opcode);
+		};
+
+iitype:
+		INSTRUCTION REGISTER COMMA REGISTER COMMA LABEL COMMENT
+		{
+			printf( "IT :{ %s } { %s } , { %s } , { %s } %d \n",  keked->instr, keked->ops[0], keked->ops[1], keked->ops[2], keked->line);
+			yyerror("label address manipulation not implemented yet");
+			instr_opcode=0;
+			instr_opcode |= OPC_I;
+			uint32_t rd = atoi(keked->ops[0]+1);
+			uint32_t rs = atoi(keked->ops[1]+1);
+			
+			printf("RD %0x RS %0x RT %s\n", rd, rs, keked->label);
+		};
+
+iimemacc:
+		INSTRUCTION REGISTER COMMA OPREF REGISTER  HEXNUM CLOSEREF COMMENT 
+		{
+			printf( "ITM :{ %s } { %s } , { %s } , { %s } %d \n",  keked->instr, keked->ops[0], keked->ops[1], keked->ops[2], keked->line);
+			instr_opcode=0;
+			uint32_t rd = atoi(keked->ops[0]+1);
+			uint32_t rs = atoi(keked->ops[1]+1);
+			uint32_t rt = strtol(keked->ops[2], NULL, 16)&0xffff;
+			printf("RD %0x RS %0x RT 0x%04x\n", rd, rs, rt);
+			for (int i = 0; i < sizeof(mem_insns)/sizeof(mem_insns[0]); ++i)
+			{
+				if(EQSTR(keked->instr, mem_insns[i])){
+					instr_opcode |= mem_opcs[i]<<I_MEMOP_POS;
+					break;
+				}
+				if(i==sizeof(mem_insns)/sizeof(mem_insns[0])-1)yyerror("unknown instruction");
+			}
+			instr_opcode |=  rs<<R_RS_POS | rd<<R_RT_POS | (uint16_t)rt;
+			printf("OPCODE %08x\n", instr_opcode);
+		};
+
+iimemacc:
+		INSTRUCTION REGISTER COMMA OPREF REGISTER  DECNUM CLOSEREF COMMENT 
+		{
+			printf( "ITM :{ %s } { %s } , { %s } , { %s } %d \n",  keked->instr, keked->ops[0], keked->ops[1], keked->ops[2], keked->line);
+			instr_opcode=0;
+			uint32_t rd = atoi(keked->ops[0]+1);
+			uint32_t rs = atoi(keked->ops[1]+1);
+			uint32_t rt = strtol(keked->ops[2], NULL, 10)&0xffff;
+			printf("RD %0x RS %0x RT %04x\n", rd, rs, rt);
+			for (int i = 0; i < sizeof(mem_insns)/sizeof(mem_insns[0]); ++i)
+			{
+				if(EQSTR(keked->instr, mem_insns[i])){
+					instr_opcode |= mem_opcs[i]<<I_MEMOP_POS;
+					break;
+				}
+				if(i==sizeof(mem_insns)/sizeof(mem_insns[0])-1)yyerror("unknown instruction");
+			}
+			instr_opcode |=  rs<<R_RS_POS | rd<<R_RT_POS | (uint16_t)rt;
+			printf("OPCODE %08x\n", instr_opcode);
+		};
+
+linefeed:
+		COMMENT
+		{
+			//fprintf(outfile, "NEWLINE \n");
+		};
+
+
+%%
+
+
+int main(int argc, char const **argv)
+{		/*yydebug=1;*/
+		infile=stdin;
+		outfile=stdout;
+		int format=0;
+		printf("%d\n", argc);
+		if(argc==1){
+			printf("usage: rabu-as [-h|infile [outfile [t|b]]]\n");
+			exit(0);
+		}else if(argc==2){
+			if(!strcmp(argv[1], "-h")){
+				printf("usage: rabu-as [-h|infile [outfile [t|b]]]\n");
+				exit(0);
+			}else{
+				infile=fopen(argv[1],"r");
+				if(infile==NULL){
+					printf("Unable to open file %s. Exiting.\n", argv[1]);
+					exit(1);
+				}
+			}
+		}else if(argc==3 || argc == 4){
+			infile=fopen(argv[1],"r");
+				if(infile==NULL){
+					printf("Unable to open file %s. Exiting.\n", argv[1]);
+					exit(1);
+				}
+			outfile=fopen(argv[2],"w");
+				if(outfile==NULL){
+					printf("Unable to create file %s. Exiting.\n", argv[2]);
+					exit(1);
+				}
+			if(argc==4){
+				format=argv[3][0]=='b';
+			}
+
+		}else{
+			printf("Uncorrect number of arguments.\n");
+			exit(1);
+		}
+		//fprintf(outfile, "v2.0 raw\n");
+		yyset_in(infile);
+		keked=malloc(sizeof(ASMPARAMS));
+		keked->instr=malloc(64);
+		keked->ops = malloc(3*sizeof(char*));
+		for (int i = 0; i < 3; ++i)
+		{
+			keked->ops[i] = malloc(64);
+		}
+		keked->label=malloc(64);
+		labels=malloc(1*sizeof(label));
+		keked->line=0;
+		keked->instr_count=0;
+        yyparse();
+        free(labels);
+        free(keked->label);
+        free(keked->ops[0]);
+        free(keked->ops[1]);
+        free(keked->ops[2]);
+        free(keked->instr);
+        free(keked);
+        return 0;
+} 
+
