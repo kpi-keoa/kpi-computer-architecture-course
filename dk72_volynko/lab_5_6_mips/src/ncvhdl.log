@@ -1,0 +1,51 @@
+ncvhdl(64): 15.20-p001: (c) Copyright 1995-2016 Cadence Design Systems, Inc.
+ncvhdl: *W,DLNOHV: Unable to find an 'hdl.var' file to load in.
+ncvhdl_p: *W,DLNOHV: Unable to find an 'hdl.var' file to load in.
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+|
+ncvhdl_p: *E,EXPACE (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|0): expecting a library unit [11.1].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+              |
+ncvhdl_p: *E,UNKCHR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|14): unrecognizable character '#' [13.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                   |
+ncvhdl_p: *E,BLBOFR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|51): based literal base out of bounds [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                      |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|54): based literal character not less than the base (']') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                       |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|55): based literal character not less than the base (' ') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                        |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|56): based literal character not less than the base ('O') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                         |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|57): based literal character not less than the base ('P') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                           |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|59): based literal character not less than the base (',') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                            |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|60): based literal character not less than the base (' ') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                             |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|61): based literal character not less than the base ('I') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                              |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|62): based literal character not less than the base ('N') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                               |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|63): based literal character not less than the base ('P') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                                |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|64): based literal character not less than the base ('U') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                                 |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|65): based literal character not less than the base ('T') [13.4.2].
+module cinadd #(parameter WIDTH = 32)(input [WIDTH-1:0] opA, input [WIDTH-1:0] opB, input addsub, output reg [WIDTH-1:0] result, output reg overflow);
+                                                                  |
+ncvhdl_p: *E,BLCOOR (/home/drcah4ec/kpi-computer-architecture-course/dk72_volynko/lab_5_6_mips/src/ALU/cinadd.v,3|66): based literal character not less than the base (' ') [13.4.2].
+ncvhdl_p: *F,MAXERR: maximum error count reached (15).
+ncvhdl_p: Memory Usage - 19.3M program + 7.2M data = 26.5M total
+ncvhdl: CPU Usage - 0.0s system + 0.0s user = 0.0s total (0.0s, 71.7% cpu)
